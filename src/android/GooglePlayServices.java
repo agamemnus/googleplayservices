@@ -52,7 +52,6 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  
  public void onConnectionFailed (ConnectionResult result) {
   if (!result.hasResolution()) return;
-  Log.d (LOGTAG, result.toString());
   try {
    result.startResolutionForResult (cordova.getActivity(), result.SIGN_IN_REQUIRED);
   } catch (SendIntentException e) {
@@ -62,17 +61,16 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  }
  public void onConnected (Bundle connectionHint) {
   String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
-  Log.w (LOGTAG, playerId);
  }
  public void onActivityResult (int requestCode, int responseCode, Intent intent) {
   if (!mGoogleApiClient.isConnecting()) mGoogleApiClient.connect ();
  }
  public void onConnectionSuspended (int cause) {mGoogleApiClient.connect ();}
  
- @Override public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
+ public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
   PluginResult result = null;
   String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
-  if (action == "getPlayerId") result = new PluginResult(PluginResult.Status.OK, playerId);
+  if ("getPlayerId".equals(action)) result = new PluginResult (PluginResult.Status.OK, playerId);
   if (result != null) callbackContext.sendPluginResult (result);
   return true;
  }
