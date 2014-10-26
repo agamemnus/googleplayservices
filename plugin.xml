@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="com.flyingsoftgames.googleplayservices" version="0.1.0">
+ <name>Google Play Services Javascript API</name>
+ <description>Easily access the Google Play Services API with Javascript.</description>
+ <author>Michael Romanovsky</author>
+ <license>MIT (see readme.md)</license>
+ <keywords>cordova,phonegap,google play services,google,play,google play,google play api,google play services api,play services,play services api,android,agamemnus,flyingsoftgames</keywords>
+ <engines><engine name="cordova" version=">=3.0.0" /></engines>
+ 
+ <js-module src="www/googleplayservices.js" name="GooglePlayServices"><clobbers target="window.plugins.GooglePlayServices" /></js-module>
+ <platform name="android">
+  <preference name="APP_ID" />
+  <config-file target="res/xml/config.xml" parent="/*">
+   <feature name="GooglePlayServices">
+    <param name="android-package" value="com.flyingsoftgames.googleplayservices.GooglePlayServices"/>
+   </feature>
+  </config-file>
+  <config-file target="res/values/strings.xml" parent="/resources">
+   <string name="app_id">$APP_ID</string>
+  </config-file>
+  <dependency id="android.support.v4" />
+  <dependency id="com.google.playservices" />
+  <source-file src="src/android/GooglePlayServices.java" target-dir="src/com/flyingsoftgames/googleplayservices" />
+  <config-file target="AndroidManifest.xml" parent="/manifest/application">
+   <meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="@string/app_id" />
+   <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
+  </config-file>
+  <config-file target="AndroidManifest.xml" parent="/manifest">
+   <uses-permission android:name="android.permission.INTERNET" />
+   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  </config-file>
+ </platform>
+</plugin>
