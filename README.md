@@ -14,4 +14,5 @@ window.plugins.GooglePlayServices.getPlayerId ({
 })
 ````
 Notes:
+
 1) At present, this seems to be a 21 character string... in a DB, perhaps store it as a maximum 24 character string to be safe.
