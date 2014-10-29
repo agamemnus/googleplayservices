@@ -7,7 +7,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.games.Players;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.plus.Plus;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -33,15 +32,22 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  
  private static final String LOGTAG = "GooglePlayServices";
  
- private CordovaInterface cordova;
- private CordovaWebView webView;
  private GoogleApiClient mGoogleApiClient;
- private CallbackContext tryConnectCallback = null;
  
- @Override public void initialize (CordovaInterface initCordova, CordovaWebView initWebView) {
+ @Override public void initialize (CordovaInterface cordova, CordovaWebView webView) {
   super.initialize (cordova, webView);
-  cordova = initCordova;
-  webView = initWebView;
+  boolean isGpsAvailable = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(cordova.getActivity()) == ConnectionResult.SUCCESS);
+  Log.w (LOGTAG, String.format("isGooglePlayServicesAvailable: %s",  isGpsAvailable ? "true" : "false"));
+  if (!isGpsAvailable) return;
+  Activity activity = cordova.getActivity();
+  Context context   = activity.getApplicationContext();
+  mGoogleApiClient = new GoogleApiClient.Builder (context)
+   .addConnectionCallbacks (this)
+   .addOnConnectionFailedListener (this)
+   .addApi (Games.API)
+   .addScope (Games.SCOPE_GAMES)
+   .build ();
+  mGoogleApiClient.connect ();
  }
  
  public void onConnectionFailed (ConnectionResult result) {
@@ -53,47 +59,19 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
    mGoogleApiClient.connect ();
   }
  }
- 
  public void onConnected (Bundle connectionHint) {
   String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
-  if (tryConnectCallback != null) {
-   tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, playerId));
-   tryConnectCallback = null;
-  }
  }
- 
  public void onActivityResult (int requestCode, int responseCode, Intent intent) {
   if (!mGoogleApiClient.isConnecting()) mGoogleApiClient.connect ();
  }
  public void onConnectionSuspended (int cause) {mGoogleApiClient.connect ();}
  
  public boolean execute (String action, JSONArray inputs, CallbackContext callbackContext) throws JSONException {
-  if        ("getPlayerId".equals(action)) {
-   String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
-   callbackContext.sendPluginResult (new PluginResult (PluginResult.Status.OK, playerId));
-  } else if ("initialize".equals(action)) {
-   // Passes the callbackContext to tryConnect ().
-   // tryConnect runs the callback with a value of false if Google Play Services isn't available.
-   tryConnect (callbackContext);
-  }
+  PluginResult result = null;
+  String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
+  if ("getPlayerId".equals(action)) result = new PluginResult (PluginResult.Status.OK, playerId);
+  if (result != null) callbackContext.sendPluginResult (result);
   return true;
- }
- 
- public void tryConnect (CallbackContext callbackContext) {
-  boolean isGpsAvailable = (GooglePlayServicesUtil.isGooglePlayServicesAvailable(cordova.getActivity()) == ConnectionResult.SUCCESS);
-  Log.w (LOGTAG, String.format("isGooglePlayServicesAvailable: %s",  isGpsAvailable ? "true" : "false"));
-  if (!isGpsAvailable) {
-   callbackContext.sendPluginResult (new PluginResult (PluginResult.Status.OK, false));
-   return;
-  }
-  Activity activity = cordova.getActivity();
-  Context context   = activity.getApplicationContext();
-  mGoogleApiClient = new GoogleApiClient.Builder (context)
-   .addConnectionCallbacks (this)
-   .addOnConnectionFailedListener (this)
-   .addApi (Games.API)
-   .addScope (Games.SCOPE_GAMES)
-   .build ();
-  mGoogleApiClient.connect ();
  }
 }
