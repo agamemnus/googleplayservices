@@ -1,6 +1,8 @@
 googleplayservices
 ==================
 
+(NOTE: broken for now... check back in a little bit..)
+
 Easily access the Google Play Services API with Javascript.
 
 Usage / Function List
