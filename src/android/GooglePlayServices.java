@@ -74,7 +74,7 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
   if        ("getPlayerId".equals(action)) {
    String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
    callbackContext.sendPluginResult (new PluginResult (PluginResult.Status.OK, playerId));
-  } else if ("doInitialize".equals(action)) {
+  } else if ("tryConnect".equals(action)) {
    // Passes the callbackContext to tryConnect ().
    // tryConnect runs the callback with a value of false if Google Play Services isn't available.
    tryConnect (callbackContext);
