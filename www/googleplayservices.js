@@ -13,7 +13,7 @@ module.exports = function () {
  exports.initialize = function (init) {
   var success = (typeof init.success != "undefined") ? init.success : function () {}
   var error   = (typeof init.error   != "undefined") ? init.error   : function () {}
-  cordova.exec (success, error, "GooglePlayServices", "initialize", [])
+  cordova.exec (success, error, "GooglePlayServices", "doInitialize", [])
  }
  
  return exports
