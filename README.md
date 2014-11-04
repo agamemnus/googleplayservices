@@ -16,7 +16,7 @@ window.plugins.GooglePlayServices.initialize ({
 })
 ````
 <br/>
-getPlayerId: Get the player ID string. ***NOTE***: At present, this seems to be a 21 character string... in a DB, perhaps store it as a maximum 24 character string to be safe.
+getPlayerId: Get the player ID string. ***NOTE***: This seems to be a 21 character string... in a DB, perhaps store it as a maximum 24 character string to be safe.
 ````
 window.plugins.GooglePlayServices.getPlayerId ({
  success : function (result) {},
