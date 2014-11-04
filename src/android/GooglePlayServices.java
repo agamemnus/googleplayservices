@@ -1,13 +1,14 @@
 package com.flyingsoftgames.googleplayservices;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.games.Players;
 import com.google.android.gms.games.Games;
-
+  
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -44,11 +45,11 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  private static final String LOGTAG = "GooglePlayServices";
  private static final int REQ_SIGN_IN_REQUIRED = 55664;
  
- public CordovaInterface        cordova            = null;
- public CordovaWebView          webView            = null;
- public  static GoogleApiClient mGoogleApiClient   = null;
- public CallbackContext         tryConnectCallback = null;
- public String                  accessToken        = "";
+ public CordovaInterface       cordova            = null;
+ public CordovaWebView         webView            = null;
+ public static GoogleApiClient mGoogleApiClient   = null;
+ public CallbackContext        tryConnectCallback = null;
+ public String                 accessToken        = "";
  
  @Override public void initialize (CordovaInterface initCordova, CordovaWebView initWebView) {
   cordova  = initCordova;
@@ -115,12 +116,12 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
    String accountName = params[0];
-   String scopes = "oauth2:profile email";
+   String scope = "oauth2:" + Scopes.PROFILE;
    String token = null;
-   Context context =  cordova.getActivity().getApplicationContext();
+   Context context = cordova.getActivity().getApplicationContext();
     Log.e (LOGTAG, "RetrieveTokenTask");
    try {
-    token = GoogleAuthUtil.getToken (context, accountName, scopes);
+    token = GoogleAuthUtil.getToken (context, accountName, scope);
    } catch (IOException e) {
     Log.e (LOGTAG, e.getMessage());
    } catch (UserRecoverableAuthException e) {
@@ -132,13 +133,13 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
   }
   
   @Override protected void onPostExecute (String newAccessToken) {
+   super.onPostExecute (newAccessToken);
    accessToken = newAccessToken;   
    if (tryConnectCallback != null) {
     String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
     tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, playerId));
     tryConnectCallback = null;
    }
-   super.onPostExecute (newAccessToken);
   }
  }
 }
