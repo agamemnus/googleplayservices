@@ -12,6 +12,7 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.plus.Account;
 import com.google.android.gms.plus.Plus;
 
@@ -117,11 +118,12 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
   @Override protected String doInBackground (String... params) {
    String accountName = params[0];
    String scope = "oauth2:" + Scopes.PROFILE;
-   String token = null;
    Context context = cordova.getActivity().getApplicationContext();
     Log.e (LOGTAG, "RetrieveTokenTask");
    try {
-    token = GoogleAuthUtil.getToken (context, accountName, scope);
+    accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
+    GoogleAuthUtil.clearToken (context, accessToken);
+    accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
    } catch (IOException e) {
     Log.e (LOGTAG, e.getMessage());
    } catch (UserRecoverableAuthException e) {
@@ -129,7 +131,7 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
    } catch (GoogleAuthException e) {
     Log.e (LOGTAG, e.getMessage());
    }
-   return token;
+   return accessToken;
   }
   
   @Override protected void onPostExecute (String newAccessToken) {
