@@ -117,7 +117,7 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
    String accountName = params[0];
-   String scope = "oauth2:" + Scopes.PROFILE;
+   String scope = "oauth2:" + Scopes.PROFILE + " " + "email";
    Context context = cordova.getActivity().getApplicationContext();
     Log.e (LOGTAG, "RetrieveTokenTask");
    try {
