@@ -18,8 +18,8 @@ import com.google.android.gms.plus.Plus;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.apache.cordova.PluginResult.Status;
 
@@ -43,7 +43,7 @@ import android.util.Log;
 
 public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
  
- private static final String LOGTAG = "GooglePlayServices";
+ private static final String LOG_TAG = "GooglePlayServices";
  private static final int REQ_SIGN_IN_REQUIRED = 55664;
  
  public CordovaInterface       cordova            = null;
@@ -59,7 +59,8 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  }
  
  @Override public void onConnectionFailed (ConnectionResult result) {
-  if (!result.hasResolution()) {Log.w (LOGTAG, "Error: no resolution. Google Play Services connection failed."); return;}
+  Log.w (LOG_TAG, result.toString());
+  if (!result.hasResolution()) {Log.w (LOG_TAG, "Error: no resolution. Google Play Services connection failed."); return;}
   try {
    result.startResolutionForResult (cordova.getActivity(), result.getErrorCode());
   } catch (SendIntentException e) {
@@ -119,15 +120,14 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
    String accountName = params[0];
    String scope = "oauth2:" + Scopes.PROFILE + " " + "email";
    Context context = cordova.getActivity().getApplicationContext();
-    Log.e (LOGTAG, "RetrieveTokenTask");
    try {
     accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
    } catch (IOException e) {
-    Log.e (LOGTAG, e.getMessage());
+    Log.e (LOG_TAG, e.getMessage());
    } catch (UserRecoverableAuthException e) {
     cordova.getActivity().startActivityForResult (e.getIntent(), REQ_SIGN_IN_REQUIRED);
    } catch (GoogleAuthException e) {
-    Log.e (LOGTAG, e.getMessage());
+    Log.e (LOG_TAG, e.getMessage());
    }
    return accessToken;
   }
