@@ -5,6 +5,12 @@ Easily access the Google Play Services API with Javascript.
 
 NOTICE: At present, the activity .java file must be modified with the addition of a ``onActivityResult`` function inside your ``CordovaActivity`` class. A sample is provided in ``/sample_activity_file.java``.
 
+Install
+----------------------
+````
+cordova plugin add https://github.com/agamemnus/googleplayservices --variables APP_ID=YOUR_APP_ID
+````
+
 Usage / Function List
 ----------------------
 
