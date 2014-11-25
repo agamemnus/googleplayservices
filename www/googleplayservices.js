@@ -1,6 +1,3 @@
-cordova.define("com.flyingsoftgames.googleplayservices.GooglePlayServices", function(require, exports, module) { var argscheck = require ('cordova/argscheck')
-var exec      = require ('cordova/exec')
-
 module.exports = function () {
  var exports = {}
  
@@ -24,5 +21,3 @@ module.exports = function () {
  
  return exports
 } ()
-
-});
