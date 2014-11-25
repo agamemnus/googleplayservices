@@ -122,8 +122,6 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
     Log.e (LOGTAG, "RetrieveTokenTask");
    try {
     accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
-    GoogleAuthUtil.clearToken (context, accessToken);
-    accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
    } catch (IOException e) {
     Log.e (LOGTAG, e.getMessage());
    } catch (UserRecoverableAuthException e) {
