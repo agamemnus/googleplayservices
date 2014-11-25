@@ -46,17 +46,9 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  private static final String LOG_TAG = "GooglePlayServices";
  private static final int REQ_SIGN_IN_REQUIRED = 55664;
  
- public CordovaInterface       cordova            = null;
- public CordovaWebView         webView            = null;
  public static GoogleApiClient mGoogleApiClient   = null;
  public CallbackContext        tryConnectCallback = null;
  public String                 accessToken        = "";
- 
- @Override public void initialize (CordovaInterface initCordova, CordovaWebView initWebView) {
-  cordova  = initCordova;
-  webView  = initWebView;
-  super.initialize (cordova, webView);
- }
  
  @Override public void onConnectionFailed (ConnectionResult result) {
   Log.w (LOG_TAG, result.toString());
