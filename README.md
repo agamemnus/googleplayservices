@@ -8,7 +8,7 @@ NOTICE: At present, the activity .java file must be modified with the addition o
 Install
 ----------------------
 ````
-cordova plugin add https://github.com/agamemnus/googleplayservices --variables APP_ID=YOUR_APP_ID
+cordova plugin add https://github.com/agamemnus/googleplayservices --variable APP_ID=YOUR_APP_ID
 ````
 
 Usage / Function List
