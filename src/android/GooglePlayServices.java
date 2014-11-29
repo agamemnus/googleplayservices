@@ -101,6 +101,7 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
    .addApi (Games.API)
    .addScope (Games.SCOPE_GAMES)
    .addApi(Plus.API)
+   .addScope(Plus.SCOPE_PLUS_PROFILE)
    .addScope(Plus.SCOPE_PLUS_LOGIN)
    .build ();
   mGoogleApiClient.connect ();
