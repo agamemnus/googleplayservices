@@ -49,10 +49,16 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  public static GoogleApiClient mGoogleApiClient   = null;
  public CallbackContext        tryConnectCallback = null;
  public String                 accessToken        = "";
- 
+ private int                   connectionAttempts = 0;
  @Override public void onConnectionFailed (ConnectionResult result) {
-  Log.w (LOG_TAG, result.toString());
-  if (!result.hasResolution()) {Log.w (LOG_TAG, "Error: no resolution. Google Play Services connection failed."); return;}
+  String errormessage = result.toString();
+  Log.w (LOG_TAG, errormessage);
+  connectionAttempts += 1;
+  if (!result.hasResolution() || connectionAttempts >= 2) {
+   Log.w (LOG_TAG, "Error: no resolution. Google Play Services connection failed.");
+   tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;
+   return;
+  }
   try {
    result.startResolutionForResult (cordova.getActivity(), result.getErrorCode());
   } catch (SendIntentException e) {
@@ -116,11 +122,15 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
    try {
     accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
    } catch (IOException e) {
-    Log.e (LOG_TAG, e.getMessage());
+    String errormessage = e.getMessage();
+    Log.e (LOG_TAG, errormessage);
+    if (tryConnectCallback != null) tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;
    } catch (UserRecoverableAuthException e) {
     cordova.getActivity().startActivityForResult (e.getIntent(), REQ_SIGN_IN_REQUIRED);
    } catch (GoogleAuthException e) {
-    Log.e (LOG_TAG, e.getMessage());
+    String errormessage = e.getMessage();
+    Log.e (LOG_TAG, errormessage);
+    if (tryConnectCallback != null) tryConnectCallback.error ("Error: " + errormessage + "."); tryConnectCallback = null;
    }
    return accessToken;
   }
