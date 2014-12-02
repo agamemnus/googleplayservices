@@ -116,11 +116,13 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
  
  private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
   @Override protected String doInBackground (String... params) {
+          
    String accountName = params[0];
-   String scope = "oauth2:" + Scopes.PROFILE + " " + "email";
+   String scope = "oauth2:https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile";
    Context context = cordova.getActivity().getApplicationContext();
    try {
-    accessToken = GoogleAuthUtil.getToken (context, accountName, scope);
+    accessToken = GoogleAuthUtil.getToken(context, accountName, scope);
+    Log.e (LOG_TAG, "127: " + accessToken);
    } catch (IOException e) {
     String errormessage = e.getMessage();
     Log.e (LOG_TAG, errormessage);
@@ -137,7 +139,7 @@ public class GooglePlayServices extends CordovaPlugin implements GoogleApiClient
   
   @Override protected void onPostExecute (String newAccessToken) {
    super.onPostExecute (newAccessToken);
-   accessToken = newAccessToken;   
+   accessToken = newAccessToken;
    if (tryConnectCallback != null) {
     String playerId = Games.Players.getCurrentPlayerId (mGoogleApiClient);
     tryConnectCallback.sendPluginResult (new PluginResult (PluginResult.Status.OK, playerId));
